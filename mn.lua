@@ -1,90 +1,59 @@
-local startTick = tick()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Consistt/Ui/main/UnLeaked"))()
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/cueshut/saves/main/octohook%20ui%20lib"))({cheatname = "Aimbot", gamename = "Roblox"})
-library:init()
+library.rank = "developer"
+local Wm = library:Watermark("Aimbot Example | v" .. library.version ..  " | " .. library:GetUsername() .. " | rank: " .. library.rank)
+local FpsWm = Wm:AddWatermark("fps: " .. library.fps)
+coroutine.wrap(function()
+    while wait(.75) do
+        FpsWm:Text("fps: " .. library.fps)
+    end
+end)()
 
-local menu = library.NewWindow({title = "Aimbot", size = UDim2.new(0, 500, 0, 300)})
+local Notif = library:InitNotifications()
 
----Tabs
-local HomeTab = menu:AddTab("Home")
-local AimingTab = menu:AddTab("Aiming")
-local BlantantTab = menu:AddTab("Blantant")
-local VisualsTab = menu:AddTab("Visuals")
-local MiscellaneousTab = menu:AddTab("Miscellaneous")
-local SettingsTab = library:CreateSettingsTab(menu)
+local LoadingXSX = Notif:Notify("Loading Aimbot, please be patient.", 5, "information")
 
----Sections
-local AimingSection = AimingTab:AddSection("Aimbot Settings", 1)
+library.title = "Aimbot"
 
----Aimbot Settings
+library:Introduction()
+wait(1)
+local Init = library:Init()
+
+local AimingTab = Init:NewTab("Aiming")
+local SettingsTab = Init:NewTab("Settings")
+
+local AimingSection = AimingTab:NewSection("Aimbot Settings")
+local SettingsSection = SettingsTab:NewSection("General Settings")
+
 local enabled = false
 local smoothness = 0.1
 local keybind = Enum.KeyCode.E
 local holdMode = true
 local fov = 90
 
-AimingTab:AddToggle(
-    {
-        text = "Enable Aimbot",
-        flag = "aimbotEnabled",
-        callback = function(bool)
-            enabled = bool
-        end
-    }
-)
+AimingTab:NewToggle("Enable Aimbot", false, function(value)
+    enabled = value
+end):AddKeybind(Enum.KeyCode.RightControl)
 
-AimingTab:AddSlider(
-    {
-        text = "Smoothness",
-        flag = "smoothness",
-        suffix = "%",
-        min = 0,
-        max = 100,
-        increment = 1,
-        callback = function(value)
-            smoothness = value / 100
-        end
-    }
-)
+AimingTab:NewSlider("Smoothness", "", true, "%", {min = 0, max = 100, default = 10}, function(value)
+    smoothness = value / 100
+end)
 
-AimingTab:AddBind(
-    {
-        text = "Keybind",
-        flag = "keybind",
-        nomouse = true,
-        noindicator = true,
-        bind = keybind,
-        callback = function(key)
-            keybind = key
-        end
-    }
-)
+AimingTab:NewKeybind("Keybind", Enum.KeyCode.E, function(key)
+    keybind = Enum.KeyCode[key]
+end)
 
-AimingTab:AddToggle(
-    {
-        text = "Hold to Aim",
-        flag = "holdMode",
-        callback = function(bool)
-            holdMode = bool
-        end
-    }
-)
+AimingTab:NewToggle("Hold to Aim", true, function(value)
+    holdMode = value
+end)
 
-AimingTab:AddSlider(
-    {
-        text = "FOV",
-        flag = "fov",
-        suffix = "°",
-        min = 1,
-        max = 360,
-        increment = 1,
-        callback = function(value)
-            fov = value
-        end
-    }
-)
+AimingTab:NewSlider("FOV", "", true, "°", {min = 1, max = 360, default = 90}, function(value)
+    fov = value
+end)
 
----Aimbot Functionality
+local FinishedLoading = Notif:Notify("Loaded Aimbot", 4, "success")
+
+-- Aimbot Functionality
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
@@ -134,3 +103,4 @@ game:GetService("UserInputService").InputEnded:Connect(function(input, gameProce
         enabled = false
     end
 end)
+
