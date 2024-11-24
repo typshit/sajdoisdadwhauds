@@ -27,16 +27,16 @@ function ToggleFarm(Name, State, Input)
     if State == Enum.UserInputState.Begin then
         Enabled = not Enabled
         LocalPlayer.Character.HumanoidRootPart.Anchored = Enabled
-        
+
         if not Enabled then
             Finished = false
             Progress = false
-            
+
             if Rod then
                 Rod.events.reset:FireServer()
             end
         end
-        
+
         ShowNotification(`Status: {Enabled}`)
     end
 end
@@ -60,8 +60,7 @@ LocalPlayer.PlayerGui.DescendantAdded:Connect(function(Descendant)
     if Descendant.Name == 'button' and Descendant.Parent.Name == 'safezone' then
         task.wait(0.1)
         local ButtonPosition, ButtonSize = Descendant.AbsolutePosition, Descendant.AbsoluteSize
-        VirtualInputManager:SendMouseButtonEvent(ButtonPosition.X + (ButtonSize.X / 2), ButtonPosition.Y + (ButtonSize.Y / 2), Enum.UserInputType.MouseButton1.Value, true, LocalPlayer.PlayerGui, 1)
-        VirtualInputManager:SendMouseButtonEvent(ButtonPosition.X + (ButtonSize.X / 2), ButtonPosition.Y + (ButtonSize.Y / 2), Enum.UserInputType.MouseButton1.Value, false, LocalPlayer.PlayerGui, 1)
+        VirtualInputManager:SendTouchTap(ButtonPosition.X + (ButtonSize.X / 2), ButtonPosition.Y + (ButtonSize.Y / 2), Enum.UserInputType.Touch, LocalPlayer.PlayerGui, 1)
     elseif Descendant.Name == 'playerbar' and Descendant.Parent.Name == 'bar' then
         Finished = true
         Descendant:GetPropertyChangedSignal('Position'):Wait()
@@ -86,7 +85,7 @@ coroutine.wrap(function()
                 Rod.events.cast:FireServer(100.5)
             end
         end
-    
+
         task.wait()
     end
 end)()
@@ -99,4 +98,3 @@ end
 
 ContextActionService:BindAction('ToggleFarm', ToggleFarm, false, Keybind)
 ShowNotification(`Press '{Keybind.Name}' to enable/disable`)
-
