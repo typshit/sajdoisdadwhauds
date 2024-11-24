@@ -60,7 +60,8 @@ LocalPlayer.PlayerGui.DescendantAdded:Connect(function(Descendant)
     if Descendant.Name == 'button' and Descendant.Parent.Name == 'safezone' then
         task.wait(0.1)
         local ButtonPosition, ButtonSize = Descendant.AbsolutePosition, Descendant.AbsoluteSize
-        VirtualInputManager:SendTouchTap(ButtonPosition.X + (ButtonSize.X / 2), ButtonPosition.Y + (ButtonSize.Y / 2), Enum.UserInputType.Touch, LocalPlayer.PlayerGui, 1)
+        VirtualInputManager:SendTouchEvent(Enum.PlatformInputType.Touch, Enum.TouchState.Began, Vector2.new(ButtonPosition.X + (ButtonSize.X / 2), ButtonPosition.Y + (ButtonSize.Y / 2)), LocalPlayer.PlayerGui)
+        VirtualInputManager:SendTouchEvent(Enum.PlatformInputType.Touch, Enum.TouchState.Ended, Vector2.new(ButtonPosition.X + (ButtonSize.X / 2), ButtonPosition.Y + (ButtonSize.Y / 2)), LocalPlayer.PlayerGui)
     elseif Descendant.Name == 'playerbar' and Descendant.Parent.Name == 'bar' then
         Finished = true
         Descendant:GetPropertyChangedSignal('Position'):Wait()
